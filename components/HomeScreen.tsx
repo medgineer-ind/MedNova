@@ -1,23 +1,23 @@
-
 import React from 'react';
-import { ArrowRight, Zap, MessageSquare, BarChart2, Calendar, ClipboardList } from 'lucide-react';
+import { ArrowRight, BarChart2, Calendar, ClipboardList } from 'lucide-react';
 
 interface HomeScreenProps {
-  onNavigate: (screen: 'practice' | 'dashboard' | 'planner' | 'testPlanner') => void;
+  onNavigate: (screen: 'dashboard' | 'planner' | 'testPlanner') => void;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
   
-  const ActionCard = ({ title, description, icon, buttonText, onClick, colorClass }: {
+  const ActionCard = ({ title, description, icon, buttonText, onClick, colorClass, extraClass = '' }: {
     title: string;
     description: string;
     icon: React.ReactNode;
     buttonText: string;
     onClick: () => void;
     colorClass: string;
+    extraClass?: string;
   }) => (
     <div 
-        className="glass-card rounded-2xl p-6 flex flex-col transition-all duration-300 transform hover:-translate-y-1 glass-card-hover"
+        className={`glass-card rounded-2xl p-6 flex flex-col transition-all duration-300 transform hover:-translate-y-1 glass-card-hover ${extraClass}`}
         style={{ perspective: '1000px', transformStyle: 'preserve-3d' }}
     >
       <div className="flex items-center space-x-4 mb-4">
@@ -50,14 +50,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ActionCard
-          title="Practice Engine"
-          description="Generate unique, PYQ-pattern questions."
-          icon={<Zap size={24} />}
-          buttonText="Begin Practice"
-          onClick={() => onNavigate('practice')}
-          colorClass="bg-yellow-500 text-yellow-300"
-        />
          <ActionCard
           title="Daily Planner"
           description="Organize your study schedule with precision."
@@ -81,6 +73,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
           buttonText="View Dashboard"
           onClick={() => onNavigate('dashboard')}
           colorClass="bg-purple-500 text-purple-300"
+          extraClass="md:col-span-2"
         />
       </div>
     </div>

@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { BookOpen, BarChart2, MessageSquare, X } from 'lucide-react';
+import { Calendar, ClipboardList, BarChart2, X } from 'lucide-react';
 
 interface IntroModalProps {
   onClose: () => void;
@@ -17,16 +16,25 @@ const IntroModal: React.FC<IntroModalProps> = ({ onClose }) => {
             </button>
         </div>
         
-        <p className="text-[var(--text-secondary)] mb-6">Your personal AI-powered coach to help you ace the NEET exam. Key features:</p>
+        <p className="text-[var(--text-secondary)] mb-6">Your personal offline coach to help you ace the NEET exam. Key features:</p>
 
         <ul className="space-y-4 text-[var(--text-primary)]">
           <li className="flex items-start space-x-4">
             <div className="flex-shrink-0 w-8 h-8 bg-[var(--glow-cyan)] bg-opacity-20 text-[var(--glow-cyan)] rounded-full flex items-center justify-center">
-                <BookOpen size={20} />
+                <Calendar size={20} />
             </div>
             <div>
-              <h3 className="font-semibold">AI Practice Engine</h3>
-              <p className="text-base text-[var(--text-secondary)]">Generate unlimited, unique quizzes based on PYQ patterns. Never see the same question twice!</p>
+              <h3 className="font-semibold">Smart Study Planner</h3>
+              <p className="text-base text-[var(--text-secondary)]">Organize your study schedule, track your progress, and log your performance for every topic.</p>
+            </div>
+          </li>
+           <li className="flex items-start space-x-4">
+            <div className="flex-shrink-0 w-8 h-8 bg-blue-500 bg-opacity-20 text-blue-400 rounded-full flex items-center justify-center">
+                <ClipboardList size={20} />
+            </div>
+            <div>
+              <h3 className="font-semibold">Custom Test Architect</h3>
+              <p className="text-base text-[var(--text-secondary)]">Build targeted test plans from the entire NEET syllabus to focus on your specific needs.</p>
             </div>
           </li>
           <li className="flex items-start space-x-4">
@@ -35,16 +43,7 @@ const IntroModal: React.FC<IntroModalProps> = ({ onClose }) => {
             </div>
             <div>
               <h3 className="font-semibold">Performance Matrix</h3>
-              <p className="text-base text-[var(--text-secondary)]">Track your performance, identify weak chapters, and review incorrect answers on your dashboard.</p>
-            </div>
-          </li>
-          <li className="flex items-start space-x-4">
-            <div className="flex-shrink-0 w-8 h-8 bg-purple-500 bg-opacity-20 text-purple-400 rounded-full flex items-center justify-center">
-                <MessageSquare size={20} />
-            </div>
-            <div>
-              <h3 className="font-semibold">NEET-Dost AI Tutor</h3>
-              <p className="text-base text-[var(--text-secondary)]">Stuck on a concept? Get instant, step-by-step explanations from your friendly AI tutor.</p>
+              <p className="text-base text-[var(--text-secondary)]">Deep dive into analytics, identify weak chapters, and review every incorrect answer.</p>
             </div>
           </li>
         </ul>

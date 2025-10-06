@@ -112,10 +112,3 @@ export interface TestPlan {
     finalAvgAccuracy: number; // 0-100
   };
 }
-// FIX: Add missing ChatMessage interface
-export interface ChatMessage {
-  sender: 'user' | 'bot';
-  text: string;
-  image?: string; // base64 encoded
-  sources?: { uri: string; title: string }[];
-}

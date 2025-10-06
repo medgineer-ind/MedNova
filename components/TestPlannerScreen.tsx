@@ -66,7 +66,8 @@ const TestPlannerScreen: React.FC<TestPlannerScreenProps> = ({
   
       const oldSubjectSyllabus = selectedTest.syllabus[subject] || [];
   
-      const newSubjectSyllabus = oldSubjectSyllabus.map(chapter => {
+      // FIX: Explicitly typing `chapter` as `TestChapter` to resolve type inference issue.
+      const newSubjectSyllabus = oldSubjectSyllabus.map((chapter: TestChapter) => {
           if (chapter.chapterName !== chapterName) {
               return chapter;
           }
@@ -99,7 +100,8 @@ const TestPlannerScreen: React.FC<TestPlannerScreenProps> = ({
     
     const oldSubjectSyllabus = selectedTest.syllabus[subject] || [];
     
-    const newSubjectSyllabus = oldSubjectSyllabus.map(chapter => {
+    // FIX: Explicitly typing `chapter` as `TestChapter` to resolve type inference issue.
+    const newSubjectSyllabus = oldSubjectSyllabus.map((chapter: TestChapter) => {
         if (chapter.chapterName !== chapterName) {
             return chapter;
         }

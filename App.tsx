@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PracticeScreen from './components/PracticeScreen';
 import DashboardScreen from './components/DashboardScreen';
 import HomeScreen from './components/HomeScreen';
 import PlannerScreen from './components/PlannerScreen';
@@ -8,7 +7,7 @@ import { Question, UserAnswer, Bookmark, PlannerTask, TopicAnalytics, TestPlan }
 import IntroModal from './components/IntroModal';
 import * as db from './services/dbService';
 
-type Screen = 'home' | 'practice' | 'dashboard' | 'planner' | 'testPlanner';
+type Screen = 'home' | 'dashboard' | 'planner' | 'testPlanner';
 
 // Helper to safely load from localStorage, ONLY for migration
 const loadFromLocalStorageForMigration = <T,>(key: string, defaultValue: T): T => {
@@ -117,18 +116,6 @@ const App: React.FC = () => {
     setShowIntro(false);
   };
 
-  const handleSessionComplete = useCallback(async (sessionAnswers: UserAnswer[], completedQuestions: Question[]) => {
-    await db.addMany(db.STORES.userAnswers, sessionAnswers);
-    setUserAnswers(prev => [...prev, ...sessionAnswers]);
-    
-    const completedQuestionTexts = completedQuestions.map(q => q.questionText);
-    const newSeenTexts = new Set([...seenQuestionTexts, ...completedQuestionTexts]);
-    await db.setKeyValue('seenQuestionTexts', Array.from(newSeenTexts));
-    setSeenQuestionTexts(newSeenTexts);
-
-    handleSetCurrentScreen('dashboard');
-  }, [seenQuestionTexts]);
-
   const handleBookmarkToggle = useCallback(async (questionId: string, note: string) => {
     const existing = bookmarks.find(b => b.questionId === questionId);
     if (existing) {
@@ -143,16 +130,6 @@ const App: React.FC = () => {
         }
     }
   }, [bookmarks, questions]);
-
-  const handleAddQuestions = useCallback(async (newQuestions: Question[]) => {
-    const existingIds = new Set(questions.map(q => q.id));
-    const uniqueNewQuestions = newQuestions.filter(q => !existingIds.has(q.id));
-    
-    if (uniqueNewQuestions.length > 0) {
-        await db.addMany(db.STORES.questions, uniqueNewQuestions);
-        setQuestions(prev => [...prev, ...uniqueNewQuestions]);
-    }
-  }, [questions]);
 
   const handleMarkAsSolved = useCallback(async (questionId: string) => {
     const newSolvedIds = new Set([...solvedIncorrectIds, questionId]);
@@ -266,14 +243,6 @@ const App: React.FC = () => {
     switch (currentScreen) {
       case 'home':
         return <HomeScreen onNavigate={handleSetCurrentScreen} />;
-      case 'practice':
-        return <PracticeScreen 
-                  onSessionComplete={handleSessionComplete} 
-                  bookmarks={bookmarks}
-                  onBookmarkToggle={handleBookmarkToggle}
-                  onQuestionsGenerated={handleAddQuestions}
-                  seenQuestionTexts={seenQuestionTexts}
-                />;
       case 'dashboard':
         return <DashboardScreen 
                 userAnswers={userAnswers} 
@@ -373,7 +342,6 @@ const App: React.FC = () => {
       <nav className="flex-shrink-0 w-full flex justify-center p-2">
         <div className="w-full max-w-2xl h-16 glass-card rounded-full flex justify-around items-center px-4">
            <NavItem screen="home" icon={<NavIcon SvgComponent={(props) => (<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>)}/>} label="Home" />
-           <NavItem screen="practice" icon={<NavIcon SvgComponent={(props) => (<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>)}/>} label="Practice" />
            <NavItem screen="planner" icon={<NavIcon SvgComponent={(props) => (<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>)}/>} label="Planner" />
            <NavItem screen="testPlanner" icon={<NavIcon SvgComponent={(props) => (<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>)}/>} label="Tests" />
            <NavItem screen="dashboard" icon={<NavIcon SvgComponent={(props) => (<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>)}/>} label="Dashboard" />
