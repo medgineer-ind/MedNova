@@ -33,7 +33,7 @@ const TestPlannerScreen: React.FC<TestPlannerScreenProps> = ({
   const getDifficultyColor = (d: number) => d === 0 ? 'text-gray-400 bg-black/20' : d > 3.5 ? 'text-red-300 bg-red-900/50' : d < 2.5 ? 'text-green-300 bg-green-900/50' : 'text-yellow-300 bg-yellow-900/50';
   const getAccuracyColor = (a: number) => a === -1 ? 'text-gray-400 bg-black/20' : a >= 85 ? 'text-green-300 bg-green-900/50' : a < 60 ? 'text-red-300 bg-red-900/50' : 'text-yellow-300 bg-yellow-900/50';
   
-  const handleSubjectToggle = (subject: Subject) => setTestSubjects(p => p.includes(subject) ? p.filter(s => s !== subject) : [...p, subject]);
+  const handleSubjectToggle = (subject: Subject) => setTestSubjects(p => p.includes(s) ? p.filter(s => s !== subject) : [...p, subject]);
   const handleCreateTest = () => { if (testName.trim() && testSubjects.length > 0) { onCreateTestPlan(testName.trim(), testSubjects); setTestName(''); setTestSubjects([]); setView('list'); } };
 
   const getTopicPerformance = (subject: Subject, chapter: string, topic: string) => {
@@ -59,14 +59,12 @@ const TestPlannerScreen: React.FC<TestPlannerScreenProps> = ({
     setSelectedTest(updatedPlan);
   };
   
-  // FIX: Refactored immutable update logic to be more explicit and aid TypeScript's type inference,
-  // resolving the 'Property 'topics' does not exist on type 'unknown'' error.
+  // FIX: Explicitly typing `chapter` as `TestChapter` resolves the 'Property 'topics' does not exist on type 'unknown'' error.
   const handleToggleTopicRevised = (subject: Subject, chapterName: string, topicName: string) => {
       if (!selectedTest) return;
   
       const oldSubjectSyllabus = selectedTest.syllabus[subject] || [];
   
-      // FIX: Explicitly typing `chapter` as `TestChapter` to resolve type inference issue.
       const newSubjectSyllabus = oldSubjectSyllabus.map((chapter: TestChapter) => {
           if (chapter.chapterName !== chapterName) {
               return chapter;
@@ -93,14 +91,12 @@ const TestPlannerScreen: React.FC<TestPlannerScreenProps> = ({
       setSelectedTest(updatedPlan);
   };
 
-  // FIX: Refactored immutable update logic for clarity and to ensure correct type inference,
-  // resolving the 'Property 'topics' does not exist on type 'unknown'' error.
+  // FIX: Explicitly typing `chapter` as `TestChapter` resolves the 'Property 'topics' does not exist on type 'unknown'' error.
   const handleLogPractice = (subject: Subject, chapterName: string, topicName: string, data: { questionsPracticed: number; questionsCorrect: number }) => {
     if (!selectedTest) return;
     
     const oldSubjectSyllabus = selectedTest.syllabus[subject] || [];
     
-    // FIX: Explicitly typing `chapter` as `TestChapter` to resolve type inference issue.
     const newSubjectSyllabus = oldSubjectSyllabus.map((chapter: TestChapter) => {
         if (chapter.chapterName !== chapterName) {
             return chapter;

@@ -328,7 +328,7 @@ const App: React.FC = () => {
                 <path d="M15 9.35001C15 8.51001 15 7.64001 13.88 7.05001C12.75 6.46001 11.25 6.46001 10.12 7.05001C9 7.64001 9 8.51001 9 9.35001C9 10.2 9.04 10.97 10.12 11.56C11.25 12.16 12.75 12.16 13.88 11.56C14.96 10.97 15 10.2 15 9.35001Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M9.10999 15.32C9.46999 16.48 10.63 17.26 11.96 17.26C13.29 17.26 14.45 16.48 14.81 15.32" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-            <h1 className="text-2xl font-bold text-white tracking-wider" style={{ textShadow: '0 0 5px rgba(255,255,255,0.5)' }}>NEET Prep AI</h1>
+            <h1 className="text-2xl font-bold text-white tracking-wider" style={{ textShadow: '0 0 5px rgba(255,255,255,0.5)' }}>NEET Prep Suite</h1>
           </div>
         </div>
       </header>

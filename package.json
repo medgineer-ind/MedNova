@@ -1,5 +1,5 @@
 {
-  "name": "copy-of-neet-prep-ai",
+  "name": "neet-prep-suite",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,8 +12,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "recharts": "^3.2.1",
-    "lucide-react": "^0.544.0",
-    "@google/genai": "^1.22.0"
+    "lucide-react": "^0.544.0"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",
