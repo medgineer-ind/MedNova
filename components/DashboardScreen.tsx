@@ -53,12 +53,14 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({
         // 1. Get stats from Planner
         let plannerPracticed = 0;
         let plannerIncorrect = 0;
-        Object.entries(topicAnalytics).forEach(([key, data]) => {
-            if (key.startsWith(subject)) {
+        // FIX: Replaced Object.entries with a for...in loop to correctly infer the type of `data` from `topicAnalytics`.
+        for (const key in topicAnalytics) {
+            if (Object.prototype.hasOwnProperty.call(topicAnalytics, key) && key.startsWith(subject)) {
+                const data = topicAnalytics[key];
                 plannerPracticed += data.totalQuestionsPracticed;
                 plannerIncorrect += data.totalQuestionsIncorrect;
             }
-        });
+        }
 
         // 2. Get stats from Practice sessions
         const practiceAnswers = userAnswers.filter(a => {

@@ -263,7 +263,12 @@ const PlannerScreen: React.FC<PlannerScreenProps> = ({ tasks, onAddTask, onCompl
     );
   }
 
-  const TaskCard = ({ task }: { task: PlannerTask }) => (
+  // FIX: Explicitly defined a prop type for the TaskCard component.
+  // This helps TypeScript correctly identify it as a React component and handle the 'key' prop without errors.
+  type TaskCardProps = {
+    task: PlannerTask;
+  };
+  const TaskCard = ({ task }: TaskCardProps) => (
     <li className={`p-4 rounded-lg flex items-center justify-between transition-colors relative overflow-hidden ${task.isCompleted ? 'bg-green-900/40' : 'bg-black/20 hover:bg-black/40'}`}>
         <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${priorityColors[task.priority] || 'bg-transparent'}`} style={{boxShadow: `0 0 5px ${priorityColors[task.priority]}`}}></div>
         <div className="pl-4 flex-grow">

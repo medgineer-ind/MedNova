@@ -63,7 +63,8 @@ const TestPlannerScreen: React.FC<TestPlannerScreenProps> = ({
   const handleToggleTopicRevised = (subject: Subject, chapterName: string, topicName: string) => {
       if (!selectedTest) return;
       const updatedSyllabus = { ...selectedTest.syllabus };
-      const subjectSyllabus = updatedSyllabus[subject]?.map(c => c.chapterName === chapterName ? { ...c, topics: c.topics.map(t => t.topicName === topicName ? { ...t, isRevised: !t.isRevised } : t) } : c);
+      // FIX: Explicitly type `c` as TestChapter to help TypeScript infer the correct type and prevent errors.
+      const subjectSyllabus = updatedSyllabus[subject]?.map((c: TestChapter) => c.chapterName === chapterName ? { ...c, topics: c.topics.map(t => t.topicName === topicName ? { ...t, isRevised: !t.isRevised } : t) } : c);
       updatedSyllabus[subject] = subjectSyllabus;
       const updatedPlan = { ...selectedTest, syllabus: updatedSyllabus };
       onUpdateTestPlan(updatedPlan);
@@ -73,7 +74,8 @@ const TestPlannerScreen: React.FC<TestPlannerScreenProps> = ({
   const handleLogPractice = (subject: Subject, chapterName: string, topicName: string, data: { questionsPracticed: number; questionsCorrect: number }) => {
     if (!selectedTest) return;
     const updatedSyllabus = { ...selectedTest.syllabus };
-    const subjectSyllabus = updatedSyllabus[subject]?.map(c => c.chapterName === chapterName ? { ...c, topics: c.topics.map(t => t.topicName === topicName ? { ...t, practiceData: { questionsPracticed: (t.practiceData?.questionsPracticed || 0) + data.questionsPracticed, questionsCorrect: (t.practiceData?.questionsCorrect || 0) + data.questionsCorrect } } : t) } : c);
+    // FIX: Explicitly type `c` as TestChapter to help TypeScript infer the correct type and prevent errors.
+    const subjectSyllabus = updatedSyllabus[subject]?.map((c: TestChapter) => c.chapterName === chapterName ? { ...c, topics: c.topics.map(t => t.topicName === topicName ? { ...t, practiceData: { questionsPracticed: (t.practiceData?.questionsPracticed || 0) + data.questionsPracticed, questionsCorrect: (t.practiceData?.questionsCorrect || 0) + data.questionsCorrect } } : t) } : c);
     updatedSyllabus[subject] = subjectSyllabus;
     const updatedPlan = { ...selectedTest, syllabus: updatedSyllabus };
     onUpdateTestPlan(updatedPlan);

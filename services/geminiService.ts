@@ -1,13 +1,17 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ChatMessage, Question } from "../types";
 
-const API_KEY = process.env.API_KEY;
+// Safely access the API key to prevent crashes in browser environments
+const API_KEY = typeof process !== 'undefined' && process.env ? process.env.API_KEY : undefined;
 
-if (!API_KEY) {
-  console.warn("API_KEY environment variable not set. NEET-Dost will not work.");
+// Conditionally initialize the GoogleGenAI instance
+let ai: GoogleGenAI | null = null;
+if (API_KEY) {
+  ai = new GoogleGenAI({ apiKey: API_KEY });
+} else {
+  console.warn("API_KEY environment variable not set. AI features will not work.");
 }
 
-const ai = new GoogleGenAI({ apiKey: API_KEY! });
 
 const model = "gemini-2.5-flash";
 
@@ -39,7 +43,7 @@ export const askNeetDost = async (
   newUserMessage: string, 
   imageBase64?: string
 ): Promise<{ text: string; sources?: { uri: string; title: string }[] }> => {
-  if (!API_KEY) {
+  if (!ai) {
     return { text: "Maaf kijiye, API key configure nahi hai. Main abhi aapki madad nahi kar sakta." };
   }
   
@@ -109,7 +113,7 @@ export const generatePracticeQuestions = async (
   difficulty: string, 
   count: number
 ): Promise<Omit<Question, 'id'>[]> => {
-  if (!API_KEY) {
+  if (!ai) {
     throw new Error("API key is not configured.");
   }
 
