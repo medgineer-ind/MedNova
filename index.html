@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NEET Prep AI | Med-Pod v2.5</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg-dark-primary: #0a0a1a;
+        --bg-dark-secondary: #1a1a2e;
+        --glow-cyan: #00f2ff;
+        --glow-magenta: #ff00ff;
+        /* Updated text colors for better visibility and contrast */
+        --text-primary: #f0f4f8; /* Brighter, almost white */
+        --text-secondary: #b0c4de; /* Lighter, clearer secondary text */
+        --border-color: rgba(0, 242, 255, 0.2);
+      }
+      
+      html {
+        /* Increase base font size for better readability across the app */
+        font-size: 17px;
+      }
+
+      body {
+        font-family: 'Exo 2', sans-serif;
+        background-color: var(--bg-dark-primary);
+        color: var(--text-primary);
+        overflow: hidden;
+      }
+      
+      #root {
+        z-index: 10;
+        position: relative;
+      }
+
+      #background-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      /* Glassmorphism Card Style */
+      .glass-card {
+        background: rgba(26, 26, 46, 0.6);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid var(--border-color);
+        box-shadow: 0 0 15px rgba(0, 242, 255, 0.1), 0 0 30px rgba(0, 242, 255, 0.05);
+      }
+      
+      .glass-card-hover:hover {
+        border-color: rgba(0, 242, 255, 0.5);
+        box-shadow: 0 0 25px rgba(0, 242, 255, 0.2);
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-dark-secondary);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--glow-cyan);
+        border-radius: 4px;
+        box-shadow: 0 0 5px var(--glow-cyan);
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #00ffff;
+      }
+
+      ::selection {
+        background-color: var(--glow-magenta);
+        color: var(--bg-dark-primary);
+      }
+
+      /* Keyframe Animations */
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease-in-out forwards;
+      }
+      
+      @keyframes slideIn3D {
+        from {
+            opacity: 0;
+            transform: translateY(20px) rotateX(-10deg);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg);
+        }
+      }
+      .animate-slide-in-3d {
+         animation: slideIn3D 0.6s ease-out forwards;
+      }
+
+      @keyframes glow-pulse {
+        0%, 100% { box-shadow: 0 0 5px var(--glow-cyan); }
+        50% { box-shadow: 0 0 15px var(--glow-cyan); }
+      }
+      .animate-glow-pulse {
+        animation: glow-pulse 2s infinite ease-in-out;
+      }
+
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "recharts": "https://aistudiocdn.com/recharts@^3.2.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.544.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.22.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <canvas id="background-canvas"></canvas>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+    <script>
+      // Particle animation script
+      const canvas = document.getElementById('background-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      let particles = [];
+      const particleCount = 70;
+
+      class Particle {
+        constructor() {
+          this.x = Math.random() * canvas.width;
+          this.y = Math.random() * canvas.height;
+          this.size = Math.random() * 2 + 1;
+          this.speedX = Math.random() * 0.5 - 0.25;
+          this.speedY = Math.random() * 0.5 - 0.25;
+          this.color = 'rgba(0, 242, 255, 0.5)';
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+
+          if (this.size > 0.1) this.size -= 0.01;
+          if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+          if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        }
+        draw() {
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      function init() {
+        for (let i = 0; i < particleCount; i++) {
+          particles.push(new Particle());
+        }
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          particles[i].draw();
+        }
+        connect();
+        requestAnimationFrame(animate);
+      }
+
+      function connect() {
+        let opacityValue = 1;
+        for (let a = 0; a < particles.length; a++) {
+          for (let b = a; b < particles.length; b++) {
+            let distance = Math.sqrt(
+              (particles[a].x - particles[b].x) * (particles[a].x - particles[b].x) +
+              (particles[a].y - particles[b].y) * (particles[a].y - particles[b].y)
+            );
+            if (distance < 100) {
+              opacityValue = 1 - (distance / 100);
+              ctx.strokeStyle = `rgba(0, 242, 255, ${opacityValue})`;
+              ctx.lineWidth = 0.5;
+              ctx.beginPath();
+              ctx.moveTo(particles[a].x, particles[a].y);
+              ctx.lineTo(particles[b].x, particles[b].y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      
+      init();
+      animate();
+
+      window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        particles = [];
+        init();
+      });
+    </script>
+  </body>
+</html>

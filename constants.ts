@@ -1,0 +1,108 @@
+
+import { Question, AnalyticsData, SyllabusChapter } from './types';
+
+export const NEET_SYLLABUS: Record<'Physics' | 'Chemistry' | 'Biology', SyllabusChapter[]> = {
+  Physics: [
+    { chapter: "Physical World and Measurement", topics: ["Units and Measurements", "Dimensions of Physical Quantities", "Error Analysis"] },
+    { chapter: "Kinematics", topics: ["Motion in a straight line", "Position-time graph", "Speed and velocity", "Uniform and non-uniform motion", "Average speed and instantaneous velocity", "Equations of Motion", "Motion in a plane", "Projectile Motion", "Circular Motion"] },
+    { chapter: "Laws of Motion", topics: ["Newton's first law", "Newton's second law", "Newton's third law", "Conservation of linear momentum", "Friction", "Dynamics of circular motion"] },
+    { chapter: "Work, Energy and Power", topics: ["Work-Energy Theorem", "Kinetic Energy", "Potential Energy", "Power", "Collisions"] },
+    { chapter: "Motion of System of Particles and Rigid Body", topics: ["Centre of mass", "Moment of inertia", "Radius of gyration", "Torque", "Angular momentum", "Conservation of angular momentum"] },
+    { chapter: "Gravitation", topics: ["Kepler's laws", "Universal law of gravitation", "Gravitational potential energy", "Escape velocity", "Orbital velocity of a satellite"] },
+    { chapter: "Properties of Bulk Matter", topics: ["Elastic behaviour", "Stress-strain relationship", "Hooke's law", "Viscosity", "Stokes' law", "Surface tension", "Thermal expansion", "Heat transfer"] },
+    { chapter: "Thermodynamics", topics: ["Zeroth Law", "First Law of Thermodynamics", "Second Law of Thermodynamics", "Heat engines and refrigerators", "Carnot engine"] },
+    { chapter: "Behaviour of Perfect Gas and Kinetic Theory", topics: ["Equation of state of a perfect gas", "Kinetic theory of gases", "Degrees of freedom", "Law of equipartition of energy"] },
+    { chapter: "Oscillations and Waves", topics: ["Simple Harmonic Motion (SHM)", "Simple pendulum", "Wave motion", "Doppler effect"] },
+    { chapter: "Electrostatics", topics: ["Electric Charges and Fields", "Coulomb's law", "Electric field", "Electric flux", "Gauss's theorem", "Electric potential", "Capacitance"] },
+    { chapter: "Current Electricity", topics: ["Electric current", "Ohm's law", "Electrical resistance", "Kirchhoff's laws", "Wheatstone bridge", "Potentiometer"] },
+    { chapter: "Magnetic Effects of Current and Magnetism", topics: ["Biot-Savart law", "Ampere's law", "Force on a moving charge in uniform magnetic and electric fields", "Bar magnet", "Magnetic field lines"] },
+    { chapter: "Electromagnetic Induction and Alternating Currents", topics: ["Faraday's law", "Lenz's Law", "Self and mutual inductance", "AC circuits", "LCR series circuit", "Resonance"] },
+    { chapter: "Electromagnetic Waves", topics: ["Electromagnetic spectrum", "Nature of electromagnetic waves"] },
+    { chapter: "Optics", topics: ["Reflection of light", "Refraction of light", "Total internal reflection", "Lenses", "Prism", "Microscopes and astronomical telescopes", "Wave optics", "Huygens' principle", "Interference", "Diffraction", "Polarisation"] },
+    { chapter: "Dual Nature of Matter and Radiation", topics: ["Photoelectric effect", "Einstein's photoelectric equation", "de Broglie relation"] },
+    { chapter: "Atoms and Nuclei", topics: ["Bohr model", "Rutherford's model", "Composition and size of nucleus", "Radioactivity", "Mass-energy relation", "Nuclear fission and fusion"] },
+    { chapter: "Electronic Devices", topics: ["Semiconductors", "p-n junction", "Transistor", "Logic gates"] }
+  ],
+  Chemistry: [
+    { chapter: "Some Basic Concepts of Chemistry", topics: ["Mole Concept", "Stoichiometry", "Percentage Composition", "Empirical and Molecular Formula"] },
+    { chapter: "Structure of Atom", topics: ["Bohr's model", "Quantum mechanical model", "de Broglie relationship", "Heisenberg uncertainty principle", "Quantum numbers", "Aufbau principle", "Pauli exclusion principle", "Hund's rule"] },
+    { chapter: "Classification of Elements and Periodicity in Properties", topics: ["Modern periodic law", "Periodic trends in properties of elements"] },
+    { chapter: "Chemical Bonding and Molecular Structure", topics: ["Ionic Bond", "Covalent Bond", "VSEPR Theory", "Valence Bond Theory", "Hybridization", "Molecular Orbital Theory", "Hydrogen bond"] },
+    { chapter: "States of Matter", topics: ["Gas Laws", "Ideal gas equation", "Kinetic molecular theory of gases", "Liquid State"] },
+    { chapter: "Thermodynamics", topics: ["First law of thermodynamics", "Second law of thermodynamics", "Enthalpy and Entropy", "Gibbs free energy"] },
+    { chapter: "Equilibrium", topics: ["Le Chatelier's Principle", "Law of Mass Action", "Equilibrium Constant (Kc, Kp)", "Ionic Equilibrium", "pH concept", "Buffer solutions", "Solubility product"] },
+    { chapter: "Redox Reactions", topics: ["Oxidation number", "Balancing redox reactions"] },
+    { chapter: "Hydrogen", topics: ["Position of hydrogen in periodic table", "Isotopes", "Properties of water", "Hydrogen peroxide"] },
+    { chapter: "s-Block Elements", topics: ["Alkali metals", "Alkaline earth metals"] },
+    { chapter: "p-Block Elements (Group 13-18)", topics: ["Group 13 Elements", "Group 14 Elements", "Group 15 Elements", "Group 16 Elements", "Group 17 Elements", "Group 18 Elements"] },
+    { chapter: "Organic Chemistry: Some Basic Principles and Techniques", topics: ["Nomenclature", "Isomerism", "Fundamental concepts in organic reaction mechanism", "Purification and characterization of organic compounds"] },
+    { chapter: "Hydrocarbons", topics: ["Alkanes", "Alkenes", "Alkynes", "Aromatic hydrocarbons"] },
+    { chapter: "Solid State", topics: ["Classification of solids", "Unit cell", "Packing in solids", "Imperfections in solids"] },
+    { chapter: "Solutions", topics: ["Types of solutions", "Concentration of solutions", "Colligative properties", "Raoult's law", "van't Hoff factor"] },
+    { chapter: "Electrochemistry", topics: ["Electrolytic cells and Galvanic cells", "Nernst equation", "Kohlrausch's Law", "Electrolysis"] },
+    { chapter: "Chemical Kinetics", topics: ["Rate of a reaction", "Factors affecting rates of reaction", "Order and molecularity of a reaction", "Arrhenius equation"] },
+    { chapter: "Surface Chemistry", topics: ["Adsorption", "Colloids", "Emulsions"] },
+    { chapter: "Coordination Compounds", topics: ["Nomenclature", "Isomerism", "Werner's theory", "Valence bond theory", "Crystal field theory"] },
+    { chapter: "Haloalkanes and Haloarenes", topics: ["Nomenclature", "Nature of C-X bond", "Substitution reactions", "Elimination reactions"] },
+    { chapter: "Alcohols, Phenols and Ethers", topics: ["Nomenclature", "Methods of preparation", "Physical and chemical properties"] },
+    { chapter: "Aldehydes, Ketones and Carboxylic Acids", topics: ["Nomenclature", "Methods of preparation", "Physical and chemical properties"] },
+    { chapter: "Organic Compounds Containing Nitrogen", topics: ["Amines", "Cyanides and Isocyanides", "Diazonium salts"] },
+    { chapter: "Biomolecules", topics: ["Carbohydrates", "Proteins", "Vitamins", "Nucleic Acids"] },
+    { chapter: "Polymers", topics: ["Classification", "Methods of polymerization"] },
+    { chapter: "Chemistry in Everyday Life", topics: ["Chemicals in medicines", "Chemicals in food", "Cleansing agents"] }
+  ],
+  Biology: [
+    { chapter: "The Living World", topics: ["What is living?", "Biodiversity", "Taxonomic categories"] },
+    { chapter: "Biological Classification", topics: ["Kingdom Monera", "Kingdom Protista", "Kingdom Fungi", "Kingdom Plantae", "Kingdom Animalia", "Viruses, Viroids and Lichens"] },
+    { chapter: "Plant Kingdom", topics: ["Algae", "Bryophytes", "Pteridophytes", "Gymnosperms", "Angiosperms"] },
+    { chapter: "Animal Kingdom", topics: ["Basis of Classification", "Classification of Animals"] },
+    { chapter: "Morphology of Flowering Plants", topics: ["Root", "Stem", "Leaf", "Inflorescence", "Flower", "Fruit and Seed"] },
+    { chapter: "Anatomy of Flowering Plants", topics: ["The Tissues", "The Tissue System", "Anatomy of Dicotyledonous and Monocotyledonous Plants"] },
+    { chapter: "Structural Organisation in Animals", topics: ["Epithelial Tissue", "Connective Tissue", "Muscle Tissue", "Neural Tissue"] },
+    { chapter: "Cell: The Unit of Life", topics: ["Cell Theory", "Prokaryotic Cells", "Eukaryotic Cells", "Mitochondria", "Plastids", "Ribosomes", "Nucleus"] },
+    { chapter: "Biomolecules", topics: ["Primary and secondary metabolites", "Proteins", "Polysaccharides", "Nucleic Acids", "Enzymes"] },
+    { chapter: "Cell Cycle and Cell Division", topics: ["Mitosis", "Meiosis"] },
+    { chapter: "Transport in Plants", topics: ["Means of Transport", "Plant-Water Relations", "Transpiration", "Phloem Transport"] },
+    { chapter: "Mineral Nutrition", topics: ["Essential Mineral Elements", "Metabolism of Nitrogen"] },
+    { chapter: "Photosynthesis in Higher Plants", topics: ["Light Reaction", "The Electron Transport", "Calvin Cycle", "Photorespiration"] },
+    { chapter: "Respiration in Plants", topics: ["Glycolysis", "Fermentation", "Aerobic Respiration", "The Respiratory Balance Sheet"] },
+    { chapter: "Plant Growth and Development", topics: ["Growth", "Differentiation", "Plant Growth Regulators"] },
+    { chapter: "Human Physiology", topics: ["Digestion and Absorption", "Breathing and Exchange of Gases", "Body Fluids and Circulation", "Excretory Products and their Elimination", "Locomotion and Movement", "Neural Control and Coordination", "Chemical Coordination and Integration"] },
+    { chapter: "Reproduction in Organisms", topics: ["Asexual Reproduction", "Sexual Reproduction"] },
+    { chapter: "Sexual Reproduction in Flowering Plants", topics: ["Flower", "Pollination", "Fertilization", "Apomixis and Polyembryony"] },
+    { chapter: "Human Reproduction", topics: ["The Male Reproductive System", "The Female Reproductive System", "Gametogenesis", "Menstrual Cycle", "Fertilisation and Implantation", "Pregnancy and Embryonic Development"] },
+    { chapter: "Reproductive Health", topics: ["Reproductive Health - Problems and Strategies", "Sexually Transmitted Infections (STIs)", "Infertility"] },
+    { chapter: "Genetics and Evolution", topics: ["Mendel's Laws of Inheritance", "Inheritance of One Gene", "Inheritance of Two Genes", "Sex Determination", "Mutation", "Genetic Disorders", "Hardy-Weinberg principle", "Origin of Life", "Evolution of Man"] },
+    { chapter: "Molecular Basis of Inheritance", topics: ["The DNA", "The Search for Genetic Material", "RNA World", "Replication", "Transcription", "Genetic Code", "Translation", "Regulation of Gene Expression", "DNA Fingerprinting"] },
+    { chapter: "Biotechnology: Principles and Processes", topics: ["Principles of Biotechnology", "Tools of Recombinant DNA Technology", "Processes of Recombinant DNA Technology"] },
+    { chapter: "Biotechnology and its Applications", topics: ["Biotechnological Applications in Agriculture", "Biotechnological Applications in Medicine", "Genetically Engineered Insulin", "Gene Therapy", "Ethical Issues"] },
+    { chapter: "Organisms and Populations", topics: ["Organism and Its Environment", "Populations", "Population Interactions"] },
+    { chapter: "Ecosystem", topics: ["Ecosystem-Structure and Function", "Productivity", "Decomposition", "Energy Flow", "Ecological Pyramids", "Ecological Succession"] },
+    { chapter: "Biodiversity and its Conservation", topics: ["Biodiversity", "Biodiversity Conservation"] },
+    { chapter: "Environmental Issues", topics: ["Air Pollution and its Control", "Water Pollution and its Control", "Solid Wastes", "Greenhouse Effect and Global Warming", "Ozone Depletion"] }
+  ]
+};
+
+export const MOCK_QUESTIONS: Question[] = [];
+
+export const MOCK_ANALYTICS: AnalyticsData = {
+  overallAccuracy: 78,
+  totalQuestionsAttempted: 150,
+  strongTopics: [
+    { topic: 'Mitochondria', accuracy: 95, questionsAttempted: 20, timePerQuestion: 35 },
+    { topic: 'VSEPR Theory', accuracy: 88, questionsAttempted: 18, timePerQuestion: 55 },
+  ],
+  weakTopics: [
+    { topic: 'Work-Energy Theorem', accuracy: 55, questionsAttempted: 22, timePerQuestion: 75 },
+    { topic: 'Le Chatelier\'s Principle', accuracy: 48, questionsAttempted: 15, timePerQuestion: 90 },
+  ],
+  performanceHistory: [
+    { date: 'Mon', accuracy: 65 },
+    { date: 'Tue', accuracy: 70 },
+    { date: 'Wed', accuracy: 68 },
+    { date: 'Thu', accuracy: 75 },
+    { date: 'Fri', accuracy: 72 },
+    { date: 'Sat', accuracy: 80 },
+    { date: 'Sun', accuracy: 78 },
+  ],
+};
