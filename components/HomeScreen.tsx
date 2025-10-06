@@ -3,7 +3,7 @@ import React from 'react';
 import { ArrowRight, Zap, MessageSquare, BarChart2, Calendar, ClipboardList } from 'lucide-react';
 
 interface HomeScreenProps {
-  onNavigate: (screen: 'practice' | 'dashboard' | 'doubt' | 'planner' | 'testPlanner') => void;
+  onNavigate: (screen: 'practice' | 'dashboard' | 'planner' | 'testPlanner') => void;
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
@@ -49,7 +49,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ActionCard
           title="Practice Engine"
           description="Generate unique, PYQ-pattern questions."
@@ -73,14 +73,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onNavigate }) => {
           buttonText="Plan Tests"
           onClick={() => onNavigate('testPlanner')}
           colorClass="bg-blue-500 text-blue-300"
-        />
-        <ActionCard
-          title="NEET-Dost AI"
-          description="Your personal AI tutor for instant doubt-solving."
-          icon={<MessageSquare size={24} />}
-          buttonText="Ask Doubt"
-          onClick={() => onNavigate('doubt')}
-          colorClass="bg-pink-500 text-pink-300"
         />
         <ActionCard
           title="Performance Matrix"

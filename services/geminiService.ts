@@ -1,124 +1,12 @@
 import { GoogleGenAI, Type } from "@google/genai";
-import { ChatMessage, Question } from "../types";
+import { Question, ChatMessage } from "../types";
 
-// A more robust way to check for the API key in different environments.
-const getApiKey = (): string | undefined => {
-    try {
-        // This will only work in a Node.js-like environment with environment variables.
-        if (typeof process !== 'undefined' && typeof process.env === 'object' && process.env !== null) {
-            return process.env.API_KEY;
-        }
-    } catch (e) {
-        // This catch block handles cases where 'process' might not be defined.
-        // It's a safeguard, though the `typeof` check should prevent this.
-    }
-    // Return undefined in a browser environment or if the key is not set.
-    return undefined;
-};
-
-const API_KEY = getApiKey();
-
-// Conditionally initialize the GoogleGenAI instance
-let ai: GoogleGenAI | null = null;
-if (API_KEY) {
-  ai = new GoogleGenAI({ apiKey: API_KEY });
-} else {
-  console.warn("API_KEY not found or in an unsupported environment. AI features will be disabled.");
-}
+// FIX: Simplify API client initialization according to guidelines.
+// Assume process.env.API_KEY is pre-configured and available.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
 
 const model = "gemini-2.5-flash";
-
-const BOT_PROMPT_TEMPLATE = `
-You are "NEET-Dost", a friendly and highly specialized AI tutor for the Indian NEET-UG medical entrance exam.
-Your expertise is strictly limited to Physics, Chemistry, and Biology as per the official NEET syllabus, with a strong focus on concepts from NCERT textbooks.
-Your primary goal is to solve student doubts in a clear, encouraging, and step-by-step manner. Your accuracy is paramount, as a student's future career depends on the information you provide.
-
-**Core Instructions:**
-1.  **Absolute Accuracy:** Double-check every fact, formula, and concept. If you are not 100% sure, you MUST use your search tool to find the correct information. Providing incorrect information is strictly forbidden.
-2.  **Language:** Communicate in Hinglish (a mix of Hindi and English), but keep all technical terms in English (e.g., "Photosynthesis", "Torque", "Mole concept").
-3.  **Persona:** Maintain a tone that is like a knowledgeable and supportive exam mentor: be encouraging, precise, and patient. Use relevant emojis to make the conversation friendly (e.g., 👍, 🤔, 💡, ✅, ❌).
-4.  **Scope:** ONLY answer questions related to NEET Physics, Chemistry, or Biology. If a user asks a question outside this scope (e.g., about movies, other exams, general knowledge), you MUST politely decline. For example: "Mera focus sirf NEET ke subjects par hai. Chalo, Physics, Chemistry, ya Biology ka koi doubt poochho!"
-5.  **Context is Key:** Always frame your explanations and tips with the ultimate goal of helping the student score better in the actual NEET exam. Relate concepts back to their importance for the exam.
-
-**Response Format:**
-When a user asks a valid doubt, you MUST structure your answer in the following four parts. Be **concise** and clear.
--   **Formatting:** Use markdown for formatting: use **bold** (\`**text**\`) for important keywords.
--   **Mathematical Exponents:** For any exponents, YOU MUST use HTML \`<sup>\` tags. For example, write 'v squared' as \`v<sup>2</sup>\` and '10 to the power of -19' as \`10<sup>-19</sup>\`. This is critical for correct display.
-
-1️⃣ **Short Answer:** A direct, one or two-line summary of the answer.
-2️⃣ **Step-by-step Explanation:** A **concise**, logical explanation. Break down complex steps using bullet points or numbered lists. Avoid long paragraphs.
-3️⃣ **NEET Tips & Common Mistakes:** 💡 Highlight common errors students make (use ❌) and provide specific, actionable tips for the NEET exam (use ✅).
-4️⃣ **Practice Question:** 🤔 Provide one small, related practice question (MCQ format) and a brief hint for the solution.
-`;
-
-export const askNeetDost = async (
-  history: ChatMessage[], 
-  newUserMessage: string, 
-  imageBase64?: string
-): Promise<{ text: string; sources?: { uri: string; title: string }[] }> => {
-  if (!ai) {
-    return { text: "Maaf kijiye, API key configure nahi hai. Main abhi aapki madad nahi kar sakta." };
-  }
-  
-  try {
-    const contents = history.map((message) => {
-      const parts = [];
-      if (message.text) {
-        parts.push({ text: message.text.replace(/<[^>]*>?/gm, "") });
-      }
-      if (message.image) {
-        parts.push({
-          inlineData: {
-            mimeType: "image/jpeg",
-            data: message.image,
-          },
-        });
-      }
-      return {
-        role: message.sender === "user" ? "user" : "model",
-        parts,
-      };
-    });
-
-    const userParts = [];
-    if (imageBase64) {
-        userParts.push({
-            inlineData: {
-                mimeType: 'image/jpeg',
-                data: imageBase64,
-            },
-        });
-    }
-
-    if (newUserMessage) {
-        userParts.push({ text: newUserMessage });
-    }
-    
-    if (userParts.length > 0) {
-        contents.push({ role: 'user', parts: userParts });
-    }
-
-    const response = await ai.models.generateContent({
-        model: model,
-        contents: contents,
-        config: {
-          systemInstruction: BOT_PROMPT_TEMPLATE,
-          tools: [{googleSearch: {}}],
-        },
-    });
-    
-    const groundingMetadata = response.candidates?.[0]?.groundingMetadata;
-    const webSources = groundingMetadata?.groundingChunks?.map((chunk: any) => chunk.web).filter(Boolean);
-    const sources = webSources?.map((source: any) => ({ uri: source.uri, title: source.title }));
-
-    return { text: response.text, sources: sources };
-
-  } catch (error) {
-    console.error("Error calling Gemini API:", error);
-    return { text: "Uh oh! Thoda technical issue aa gaya hai. Please try again later." };
-  }
-};
 
 export const generatePracticeQuestions = async (
   subject: string, 
@@ -127,10 +15,7 @@ export const generatePracticeQuestions = async (
   difficulty: string, 
   count: number
 ): Promise<Omit<Question, 'id'>[]> => {
-  if (!ai) {
-    throw new Error("API key is not configured.");
-  }
-
+  // FIX: Remove redundant null check for 'ai' instance.
   const prompt = `
     You are a lead question designer for the National Testing Agency (NTA), the body that conducts the NEET-UG exam in India. Your sole task is to generate ${count} brand-new, unique, multiple-choice questions (MCQs) for an upcoming mock test. These questions must be of the highest quality and indistinguishable from those in the actual NEET exam. A student's future career depends on the quality and relevance of your questions.
 
@@ -201,5 +86,82 @@ export const generatePracticeQuestions = async (
   } catch (error) {
     console.error("Error generating questions with Gemini:", error);
     throw new Error("Failed to generate practice questions. Please try again.");
+  }
+};
+
+// FIX: Implement the missing 'askNeetDost' function for the AI Tutor.
+export const askNeetDost = async (
+  history: ChatMessage[],
+  question: string,
+  imageBase64?: string
+): Promise<{ text: string; sources: { uri: string; title: string }[] }> => {
+  const systemInstruction = `You are NEET-Dost, an expert AI tutor for the Indian NEET-UG medical entrance exam. Your personality is encouraging, clear, and highly knowledgeable. Your primary goal is to solve student doubts in Physics, Chemistry, and Biology with exceptional clarity and depth.
+
+**Response Structure (MANDATORY):**
+You MUST structure EVERY response using the following format, using markdown for formatting. Do not deviate from this structure.
+
+1️⃣ **Short Answer:**
+Start with a direct, concise answer to the student's question. Get straight to the point.
+
+2️⃣ **Step-by-step Explanation:**
+Provide a detailed, logical explanation. Break down complex concepts into simple, easy-to-understand steps. Use analogies if helpful. For numerical problems, show all calculation steps clearly.
+
+3️⃣ **NEET Tips & Common Mistakes:**
+Offer a valuable tip related to the concept for the NEET exam. Mention common pitfalls or misconceptions students have about this topic and how to avoid them.
+
+4️⃣ **Practice Question:**
+(Optional, but highly recommended) Provide a new, relevant MCQ-style practice question based on the concept discussed. Include four options and the correct answer with a brief explanation.
+
+**Core Instructions:**
+- **Clarity is Key:** Explain things as if you're talking to a 17-year-old high school student.
+- **NCERT Focus:** Base your explanations on the NCERT curriculum, which is the foundation for the NEET exam.
+- **Web Search:** Use your web search capability to provide the most accurate, up-to-date information, especially for definitions, facts, and recent discoveries. You MUST cite your sources.
+- **Image Analysis:** If an image is provided, analyze it carefully as the primary context for the student's question.
+`;
+  // Map history to Gemini's format. Filter out the initial bot greeting.
+  const contents = history
+    .filter(m => m.sender === 'user' || (m.sender === 'bot' && m.text !== "Hi! I am NEET-Dost. How can I help you with Physics, Chemistry, or Biology today?"))
+    .map(msg => ({
+      role: msg.sender === 'user' ? 'user' : 'model',
+      parts: [{ text: msg.text }]
+  }));
+  
+  const userParts: any[] = [{ text: question }];
+  if (imageBase64) {
+      userParts.push({
+          inlineData: {
+              mimeType: 'image/jpeg', // Assuming jpeg, can be improved to detect mimeType from file
+              data: imageBase64
+          }
+      });
+  }
+  contents.push({ role: 'user', parts: userParts });
+
+  try {
+      const response = await ai.models.generateContent({
+          model: model,
+          contents: contents,
+          config: {
+            systemInstruction: systemInstruction,
+            tools: [{ googleSearch: {} }],
+          },
+      });
+      
+      const text = response.text;
+      const groundingChunks = response.candidates?.[0]?.groundingMetadata?.groundingChunks || [];
+      const sources: { uri: string; title: string }[] = groundingChunks
+        .map((chunk: any) => ({
+            uri: chunk.web?.uri,
+            title: chunk.web?.title,
+        }))
+        .filter((source: any) => source.uri && source.title);
+
+      // Deduplicate sources by URI
+      const uniqueSources = Array.from(new Map(sources.map(item => [item.uri, item])).values());
+      
+      return { text, sources: uniqueSources };
+  } catch (error) {
+      console.error("Error asking NEET-Dost:", error);
+      throw new Error("Failed to get a response from the AI tutor. Please try again.");
   }
 };

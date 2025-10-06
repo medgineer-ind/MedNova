@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PracticeScreen from './components/PracticeScreen';
 import DashboardScreen from './components/DashboardScreen';
-import DoubtSolverScreen from './components/DoubtSolverScreen';
 import HomeScreen from './components/HomeScreen';
 import PlannerScreen from './components/PlannerScreen';
 import TestPlannerScreen from './components/TestPlannerScreen';
@@ -9,7 +8,7 @@ import { Question, UserAnswer, Bookmark, PlannerTask, TopicAnalytics, TestPlan }
 import IntroModal from './components/IntroModal';
 import * as db from './services/dbService';
 
-type Screen = 'home' | 'practice' | 'dashboard' | 'doubt' | 'planner' | 'testPlanner';
+type Screen = 'home' | 'practice' | 'dashboard' | 'planner' | 'testPlanner';
 
 // Helper to safely load from localStorage, ONLY for migration
 const loadFromLocalStorageForMigration = <T,>(key: string, defaultValue: T): T => {
@@ -289,8 +288,6 @@ const App: React.FC = () => {
                 solvedIncorrectIds={solvedIncorrectIds}
                 onMarkAsSolved={handleMarkAsSolved}
                />;
-      case 'doubt':
-        return <DoubtSolverScreen />;
       case 'planner':
         return <PlannerScreen tasks={tasks} onAddTask={handleAddTask} onCompleteTask={handleCompleteTask} />;
       case 'testPlanner':
@@ -380,7 +377,6 @@ const App: React.FC = () => {
            <NavItem screen="planner" icon={<NavIcon SvgComponent={(props) => (<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>)}/>} label="Planner" />
            <NavItem screen="testPlanner" icon={<NavIcon SvgComponent={(props) => (<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>)}/>} label="Tests" />
            <NavItem screen="dashboard" icon={<NavIcon SvgComponent={(props) => (<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/></svg>)}/>} label="Dashboard" />
-           <NavItem screen="doubt" icon={<NavIcon SvgComponent={(props) => (<svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z"/><path d="M10 2c1 .5 2 2 2 5"/></svg>)}/>} label="NEET-Dost" />
         </div>
       </nav>
     </div>
