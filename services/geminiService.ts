@@ -1,15 +1,29 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { ChatMessage, Question } from "../types";
 
-// Safely access the API key to prevent crashes in browser environments
-const API_KEY = typeof process !== 'undefined' && process.env ? process.env.API_KEY : undefined;
+// A more robust way to check for the API key in different environments.
+const getApiKey = (): string | undefined => {
+    try {
+        // This will only work in a Node.js-like environment with environment variables.
+        if (typeof process !== 'undefined' && typeof process.env === 'object' && process.env !== null) {
+            return process.env.API_KEY;
+        }
+    } catch (e) {
+        // This catch block handles cases where 'process' might not be defined.
+        // It's a safeguard, though the `typeof` check should prevent this.
+    }
+    // Return undefined in a browser environment or if the key is not set.
+    return undefined;
+};
+
+const API_KEY = getApiKey();
 
 // Conditionally initialize the GoogleGenAI instance
 let ai: GoogleGenAI | null = null;
 if (API_KEY) {
   ai = new GoogleGenAI({ apiKey: API_KEY });
 } else {
-  console.warn("API_KEY environment variable not set. AI features will not work.");
+  console.warn("API_KEY not found or in an unsupported environment. AI features will be disabled.");
 }
 
 

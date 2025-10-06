@@ -60,24 +60,74 @@ const TestPlannerScreen: React.FC<TestPlannerScreenProps> = ({
     setSelectedTest(updatedPlan);
   };
   
+  // FIX: Refactored immutable update logic to be more explicit and aid TypeScript's type inference,
+  // resolving the 'Property 'topics' does not exist on type 'unknown'' error.
   const handleToggleTopicRevised = (subject: Subject, chapterName: string, topicName: string) => {
       if (!selectedTest) return;
-      const updatedSyllabus = { ...selectedTest.syllabus };
-      // FIX: Explicitly type `c` as TestChapter to help TypeScript infer the correct type and prevent errors.
-      const subjectSyllabus = updatedSyllabus[subject]?.map((c: TestChapter) => c.chapterName === chapterName ? { ...c, topics: c.topics.map(t => t.topicName === topicName ? { ...t, isRevised: !t.isRevised } : t) } : c);
-      updatedSyllabus[subject] = subjectSyllabus;
-      const updatedPlan = { ...selectedTest, syllabus: updatedSyllabus };
+  
+      const oldSubjectSyllabus = selectedTest.syllabus[subject] || [];
+  
+      const newSubjectSyllabus = oldSubjectSyllabus.map(chapter => {
+          if (chapter.chapterName !== chapterName) {
+              return chapter;
+          }
+          return {
+              ...chapter,
+              topics: chapter.topics.map(topic =>
+                  topic.topicName === topicName
+                      ? { ...topic, isRevised: !topic.isRevised }
+                      : topic
+              )
+          };
+      });
+  
+      const updatedPlan = {
+          ...selectedTest,
+          syllabus: {
+              ...selectedTest.syllabus,
+              [subject]: newSubjectSyllabus
+          }
+      };
+  
       onUpdateTestPlan(updatedPlan);
       setSelectedTest(updatedPlan);
   };
 
+  // FIX: Refactored immutable update logic for clarity and to ensure correct type inference,
+  // resolving the 'Property 'topics' does not exist on type 'unknown'' error.
   const handleLogPractice = (subject: Subject, chapterName: string, topicName: string, data: { questionsPracticed: number; questionsCorrect: number }) => {
     if (!selectedTest) return;
-    const updatedSyllabus = { ...selectedTest.syllabus };
-    // FIX: Explicitly type `c` as TestChapter to help TypeScript infer the correct type and prevent errors.
-    const subjectSyllabus = updatedSyllabus[subject]?.map((c: TestChapter) => c.chapterName === chapterName ? { ...c, topics: c.topics.map(t => t.topicName === topicName ? { ...t, practiceData: { questionsPracticed: (t.practiceData?.questionsPracticed || 0) + data.questionsPracticed, questionsCorrect: (t.practiceData?.questionsCorrect || 0) + data.questionsCorrect } } : t) } : c);
-    updatedSyllabus[subject] = subjectSyllabus;
-    const updatedPlan = { ...selectedTest, syllabus: updatedSyllabus };
+    
+    const oldSubjectSyllabus = selectedTest.syllabus[subject] || [];
+    
+    const newSubjectSyllabus = oldSubjectSyllabus.map(chapter => {
+        if (chapter.chapterName !== chapterName) {
+            return chapter;
+        }
+        return {
+            ...chapter,
+            topics: chapter.topics.map(topic => {
+                if (topic.topicName !== topicName) {
+                    return topic;
+                }
+                return {
+                    ...topic,
+                    practiceData: {
+                        questionsPracticed: (topic.practiceData?.questionsPracticed || 0) + data.questionsPracticed,
+                        questionsCorrect: (topic.practiceData?.questionsCorrect || 0) + data.questionsCorrect
+                    }
+                };
+            })
+        };
+    });
+
+    const updatedPlan = {
+        ...selectedTest,
+        syllabus: {
+            ...selectedTest.syllabus,
+            [subject]: newSubjectSyllabus
+        }
+    };
     onUpdateTestPlan(updatedPlan);
     setSelectedTest(updatedPlan);
   };
